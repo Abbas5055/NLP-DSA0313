@@ -1,0 +1,35 @@
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+
+# Sample documents
+documents = [
+    "The sky is blue.",
+    "The sun is bright.",
+    "The sun in the sky is bright.",
+    "We can see the shining sun, the bright sun."
+]
+
+# Sample query
+query = "The sun is shining."
+
+# Initialize the TF-IDF Vectorizer
+vectorizer = TfidfVectorizer()
+
+# Compute the TF-IDF matrix for the documents
+tfidf_matrix = vectorizer.fit_transform(documents)
+
+# Compute the TF-IDF vector for the query
+query_vector = vectorizer.transform([query])
+
+# Compute the cosine similarity between the query and the documents
+cosine_similarities = cosine_similarity(query_vector, tfidf_matrix).flatten()
+
+# Rank the documents based on the similarity scores
+ranked_indices = np.argsort(cosine_similarities)[::-1]
+
+# Print the ranked documents
+print("Query:", query)
+print("\nDocument Rankings:")
+for index in ranked_indices:
+    print(f"Document {index + 1}: (Score: {cosine_similarities[index]:.4f}) - {documents[index]}")
