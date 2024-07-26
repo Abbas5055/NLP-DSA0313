@@ -1,0 +1,25 @@
+from nltk.corpus import wordnet as wn
+
+# Function to get synsets for a word
+def get_synsets(word):
+    synsets = wn.synsets(word)
+    return synsets
+
+# Function to print details of each synset
+def print_synset_details(synsets):
+    for synset in synsets:
+        print(f"Synset: {synset.name()}")
+        print(f"Definition: {synset.definition()}")
+        print(f"Examples: {synset.examples()}")
+        print(f"Lemma Names: {synset.lemma_names()}")
+        print("")
+
+# Example word to explore
+word = "bank"
+
+# Retrieve synsets for the word
+synsets = get_synsets(word)
+
+# Print details of each synset
+print(f"Synsets for the word '{word}':")
+print_synset_details(synsets)
