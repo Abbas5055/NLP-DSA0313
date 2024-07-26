@@ -1,0 +1,51 @@
+from nltk.corpus import wordnet as wn
+from nltk.corpus import wordnet_ic
+from nltk.tokenize import word_tokenize
+from collections import defaultdict
+import nltk
+
+nltk.download('punkt')
+
+def lesk(context_sentence, ambiguous_word):
+    """
+    Simplified Lesk algorithm for word sense disambiguation.
+    
+    :param context_sentence: The sentence containing the ambiguous word
+    :param ambiguous_word: The ambiguous word to disambiguate
+    :return: The best sense of the word in the given context
+    """
+    best_sense = None
+    max_overlap = 0
+    
+    # Tokenize the context sentence
+    context = set(word_tokenize(context_sentence))
+    
+    # Get all possible senses for the ambiguous word
+    senses = wn.synsets(ambiguous_word)
+    
+    for sense in senses:
+        # Get the gloss and examples of the sense
+        signature = set(word_tokenize(sense.definition()))
+        for example in sense.examples():
+            signature.update(word_tokenize(example))
+        
+        # Calculate the overlap between the context and the signature
+        overlap = len(context.intersection(signature))
+        
+        if overlap > max_overlap:
+            max_overlap = overlap
+            best_sense = sense
+    
+    return best_sense
+
+# Example usage
+context_sentence = "I went to the bank to deposit money."
+ambiguous_word = "bank"
+
+# Disambiguate the ambiguous word in the given context
+best_sense = lesk(context_sentence, ambiguous_word)
+
+print(f"Context Sentence: {context_sentence}")
+print(f"Ambiguous Word: {ambiguous_word}")
+print(f"Best Sense: {best_sense.name()}")
+print(f"Definition: {best_sense.definition()}")
